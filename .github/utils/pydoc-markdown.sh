@@ -1,10 +1,10 @@
 #!/bin/bash
 
 set -e   # Fails on any error in the following loop
-export PYTHONPATH=$PWD/docs/pydoc # Make the renderers available to pydoc
-cd docs/_src/api/api/
-mkdir temp
+cd docs/pydoc
+rm -rf temp && mkdir temp
 cd temp
-for file in ../../pydoc/* ; do
+for file in ../config/* ; do
+    echo "Converting $file..."
     pydoc-markdown "$file"
 done

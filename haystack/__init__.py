@@ -1,25 +1,34 @@
-# pylint: disable=wrong-import-position,wrong-import-order
+# SPDX-FileCopyrightText: 2022-present deepset GmbH <info@deepset.ai>
+#
+# SPDX-License-Identifier: Apache-2.0
 
-from typing import Union
-from types import ModuleType
+import haystack.logging
+import haystack.tracing
+from haystack.core.component import component
+from haystack.core.errors import ComponentError, DeserializationError
+from haystack.core.pipeline import Pipeline, PredefinedPipeline
+from haystack.core.serialization import default_from_dict, default_to_dict
+from haystack.dataclasses import Answer, Document, ExtractedAnswer, GeneratedAnswer
 
-try:
-    from importlib import metadata
-except (ModuleNotFoundError, ImportError):
-    # Python <= 3.7
-    import importlib_metadata as metadata  # type: ignore
+# Initialize the logging configuration
+# This is a no-op unless `structlog` is installed
+haystack.logging.configure_logging()
 
-__version__: str = str(metadata.version("farm-haystack"))
+# Same for tracing (no op if `opentelemetry` or `ddtrace` is not installed)
+haystack.tracing.auto_enable_tracing()
 
+__all__ = [
+    "component",
+    "default_from_dict",
+    "default_to_dict",
+    "DeserializationError",
+    "ComponentError",
+    "Pipeline",
+    "PredefinedPipeline",
+    "Document",
+    "Answer",
+    "GeneratedAnswer",
+    "ExtractedAnswer",
+]
 
-# Logging is not configured here on purpose, see https://github.com/deepset-ai/haystack/issues/2485
-import logging
-
-import pandas as pd
-
-from haystack.schema import Document, Answer, Label, MultiLabel, Span, EvaluationResult
-from haystack.nodes.base import BaseComponent
-from haystack.pipelines.base import Pipeline
-
-
-pd.options.display.max_colwidth = 80
+# FIXME: remove before merging PR
